@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>QGen</title>
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+
+    <style>
+        .contentContainer {
+            background-color: #98f8bd;
+            background-size: cover;
+            width: 100%;
+        }
+        
+        .bold {
+            font-weight: bold;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .content {}
+        
+        .title {
+            padding-top: 30px;
+            font-size: 50px;
+        }
+        
+        .description {
+            font-size: 20px;
+        }
+        
+        .box {
+            color: black;
+            background-color: lightcoral;
+            width: 33%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 10px;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            text-align: center;
+            border: 2px solid white;
+        }
+        
+        .quote {
+            font-size: 30px;
+        }
+        
+        .author {
+            font-size: 20px;
+            font-style: italic;
+        }
+        
+        .btn {
+            background-color: papayawhip;
+            margin-right: 100px;
+            margin-left: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid contentContainer ">
+        <div class="  center">
+            <div class="title bold"> Random Quote Generator </div>
+            <div class="description"> These are some of my favorite quotes:</div>
+            <div class="box">
+                <div class="content">
+                    <span class="quote"> </span>
+                    <br/>
+                    <span class="author"></span>
+                    <br/>
+
+                </div>
+            </div>
+            <button class="btn btn-default newBtn" type="submit">New Quote</button>
+            <button class="btn btn-default shareBtn " type="submit"> Share</button>
+        </div>
+
+
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $(".contentContainer").css("min-height", $(window).height());
+
+            var randQuote;
+            var randAuthor;
+
+            function getQuote() {
+
+                $.ajax({
+                    url: 'http://api.forismatic.com/api/1.0/',
+                    jsonp: 'jsonp',
+                    dataType: 'jsonp',
+
+                    data: {
+                        method: 'getQuote',
+                        lang: 'en',
+                        format: 'jsonp'
+                    },
+                    success: function (response) {
+                        randQuote = response.quoteText;
+                        randAuthor = response.quoteAuthor;
+                        $('.quote').text(randQuote)
+                        if (randAuthor) {
+                            $('.author').text('- ' + randAuthor);
+                        } else {
+                            $('.author').text('- unknown');
+                        }
+
+                    }
+                });
+            }
+            getQuote();
+
+            $('.newBtn').on('click', function (event) {
+                event.preventDefault();
+                getQuote();
+            });
+            $('.shareBtn').on('click', function (event) {
+                event.preventDefault();
+                window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(randQuote + '--' + randAuthor));
+            });
+
+
+
+        });
+    </script>
+
+</body>
+
+</html>
+
+<body>
